@@ -18,8 +18,10 @@ const generateCode = () => {
   return Math.random().toString(36).slice(2, 8);
 };
 
-const getBaseUrl = () => {
-  return process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+const getBaseUrl = (req) => {
+  const host = req.get('host');
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+  return `${protocol}://${host}`;
 };
 
 export const shortenUrl = async (req, res) => {
@@ -46,7 +48,7 @@ export const shortenUrl = async (req, res) => {
       code = generateCode();
     }
 
-    const shortUrl = `${getBaseUrl()}/${code}`;
+    const shortUrl = `${getBaseUrl(req)}/${code}`;
     const url = await Url.create({ longUrl: normalizedUrl, shortUrl, code, user: req.user._id });
 
     return res.status(201).json(url);

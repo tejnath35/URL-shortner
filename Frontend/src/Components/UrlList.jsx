@@ -25,7 +25,7 @@ function UrlList({ urls, loading }) {
       ) : (
         <ul className="space-y-4">
           {urls.map((url) => {
-            const displayUrl = url.shortUrl.replace("https://url-shortner-77cy.onrender.com", "http://urls.com");
+            const displayUrl = `urls.com/${url.code}`;
             return (
               <li key={url._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-900 rounded-lg border border-gray-700 gap-4 transition-colors hover:border-gray-600">
                 <div className="flex-1 min-w-0 overflow-hidden">
