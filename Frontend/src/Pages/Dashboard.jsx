@@ -4,7 +4,7 @@ import UrlForm from "../Components/UrlForm.jsx";
 import UrlList from "../Components/UrlList.jsx";
 import "../App.css";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function Dashboard() {
   const [urls, setUrls] = useState([]);
