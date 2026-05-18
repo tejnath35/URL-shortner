@@ -1,0 +1,33 @@
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import urlRoutes from "./Routes/urlRoutes.js";
+import authRoutes from "./Routes/authRoutes.js";
+import { redirectUrl } from "./Controllers/urlController.js";
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
+
+app.use(cors());
+app.use(express.json());
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+app.get("/", (req, res) => {
+  res.send("URL Shortener API is running");
+});
+
+app.use("/api/auth", authRoutes);
+app.use("/api", urlRoutes);
+app.get("/:code", redirectUrl);
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
