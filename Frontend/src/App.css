@@ -1,3 +1,12 @@
+:root {
+  --border: #d1d5db;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+  --accent: #6366f1;
+  --accent-bg: rgba(99, 102, 241, 0.1);
+  --text: #111827;
+  --text-h: #1f2937;
+}
+
 .app-shell {
   padding: 32px 24px;
   max-width: 960px;
@@ -40,6 +49,10 @@ h1 {
   margin-bottom: 24px;
 }
 
+.url-form {
+  color: var(--text-h);
+}
+
 .url-form label {
   display: block;
   margin-bottom: 12px;
@@ -47,10 +60,42 @@ h1 {
   color: var(--text-h);
 }
 
+.url-form input {
+  flex: 1;
+  min-width: 260px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  outline: none;
+  font-size: 1rem;
+  background: #ffffff;
+  color: #111827;
+}
+
+.url-form input::placeholder {
+  color: #6b7280;
+}
+
 .form-row {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.url-list {
+  color: var(--text-h);
+  background: #ffffff;
+}
+
+.url-list p,
+.url-list a,
+.url-list .copy-button,
+.url-list .url-text {
+  color: var(--text-h);
+}
+
+.url-list a {
+  color: var(--accent);
 }
 
 .url-form input {
