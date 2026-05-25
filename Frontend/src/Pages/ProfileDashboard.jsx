@@ -100,7 +100,7 @@ function ProfileDashboard() {
         <div className="hero-panel" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <p className="eyebrow">Dashboard</p>
-            <h1>Overview</h1>
+            <h1 className="text-blue-500">Overview</h1>
           </div>
           {!isEditing && (
             <button 
