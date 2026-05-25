@@ -5,6 +5,7 @@ import "../App.css";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function Register() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -22,7 +23,7 @@ function Register() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       const data = await response.json();
@@ -50,6 +51,19 @@ function Register() {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleRegister}>
           <div className="space-y-4">
+            <div>
+              <label className="sr-only" htmlFor="name">Full Name</label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Full Name"
+                required
+                disabled={loading}
+                className="appearance-none rounded-lg relative block w-full px-4 py-3 bg-gray-900 border border-gray-700 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors duration-200"
+              />
+            </div>
             <div>
               <label className="sr-only" htmlFor="email-address">Email address</label>
               <input
