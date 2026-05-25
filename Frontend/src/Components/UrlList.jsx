@@ -25,7 +25,8 @@ function UrlList({ urls, loading }) {
       ) : (
         <ul>
           {urls.map((url) => {
-            const displayUrl = url.shortUrl.replace("http://localhost:5000", "http://urls.com");
+            const code = url.code || url.shortUrl.split("/").pop();
+            const displayUrl = `url.com/${code}`;
             return (
               <li key={url._id} className="url-row">
                 <div className="url-text">
