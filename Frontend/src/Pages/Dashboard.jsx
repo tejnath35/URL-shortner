@@ -94,7 +94,7 @@ function Dashboard() {
       <div className="app-shell">
         <div className="hero-panel">
           <p className="eyebrow">Link Management</p>
-          <h1>Shorten Links</h1>
+          <h1 className="text-blue-500">Shorten Links</h1>
           <p className="intro">
             Paste a URL below to generate a compact, shareable link in seconds.
           </p>
