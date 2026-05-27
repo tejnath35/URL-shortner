@@ -19,6 +19,16 @@ const generateCode = () => {
 };
 
 const getBaseUrl = (req) => {
+  // Use explicit environment variables to prevent localhost hardcoding in production
+  if (process.env.NODE_ENV === "production" && process.env.RENDER_URL) {
+    return process.env.RENDER_URL;
+  }
+  
+  if (process.env.BASE_URL) {
+    return process.env.BASE_URL;
+  }
+
+  // Fallback to request host if env vars are missing
   const host = req.get('host');
   const protocol = req.headers['x-forwarded-proto'] || req.protocol;
   return `${protocol}://${host}`;

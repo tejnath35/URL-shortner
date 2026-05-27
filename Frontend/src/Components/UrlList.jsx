@@ -25,23 +25,30 @@ function UrlList({ urls, loading }) {
       ) : (
         <ul>
           {urls.map((url) => {
-            const code = url.code || url.shortUrl.split("/").pop();
-            const displayUrl = `url.com/${code}`;
+            const displayUrl = url.shortUrl;
+            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url.shortUrl)}`;
+            
             return (
-              <li key={url._id} className="url-row">
-                <div className="url-text">
-                  <p className="original-url">{url.longUrl}</p>
-                  <a href={url.shortUrl} target="_blank" rel="noreferrer">
+              <li key={url._id} className="url-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', padding: '16px', background: 'white', borderRadius: '8px', border: '1px solid var(--border)', marginBottom: '12px' }}>
+                <div className="url-text" style={{ flex: 1, overflow: 'hidden' }}>
+                  <p className="original-url" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-light)', fontSize: '0.875rem', marginBottom: '4px' }}>{url.longUrl}</p>
+                  <a href={url.shortUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: '600', textDecoration: 'none', display: 'inline-block' }}>
                     {displayUrl}
                   </a>
                 </div>
-                <button
-                  type="button"
-                  className="copy-button"
-                  onClick={() => copyToClipboard(displayUrl)}
-                >
-                  {copied === displayUrl ? "Copied" : "Copy"}
-                </button>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '64px', height: '64px', padding: '4px', background: 'white', border: '1px solid #e5e7eb', borderRadius: '4px' }}>
+                    <img src={qrCodeUrl} alt="QR Code" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  </div>
+                  <button
+                    type="button"
+                    className="copy-button"
+                    onClick={() => copyToClipboard(displayUrl)}
+                  >
+                    {copied === displayUrl ? "Copied" : "Copy"}
+                  </button>
+                </div>
               </li>
             );
           })}
