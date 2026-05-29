@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import Navbar from "../Components/Navbar.jsx";
 
 function Home() {
+  const token = localStorage.getItem("token");
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
@@ -33,10 +35,10 @@ function Home() {
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link 
-                to="/register" 
+                to={token ? "/urls" : "/register"} 
                 className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-lg transition-all duration-200 shadow-[0_8px_30px_rgb(37,99,235,0.3)] hover:shadow-[0_8px_30px_rgb(37,99,235,0.5)] transform hover:-translate-y-1 w-full sm:w-auto text-center"
               >
-                Get Started for Free
+                {token ? "Manage Links" : "Get Started for Free"}
               </Link>
               <Link 
                 to="/urls" 

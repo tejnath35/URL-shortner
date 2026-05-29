@@ -7,6 +7,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function ProfileDashboard() {
   const [urlCount, setUrlCount] = useState(0);
+  const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Profile editing state
@@ -44,6 +45,7 @@ function ProfileDashboard() {
       
       if (response.ok) {
         const data = await response.json();
+        setUrls(data);
         setUrlCount(data.length);
       }
     } catch (error) {
@@ -94,13 +96,15 @@ function ProfileDashboard() {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/40 font-sans">
       <Navbar />
-      <div className="app-shell">
-        <div className="hero-panel" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
-            <p className="eyebrow">Dashboard</p>
-            <h1 className="text-blue-500">Overview</h1>
+            <p className="text-sm font-bold tracking-widest text-blue-600 uppercase mb-2">Dashboard</p>
+            <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+              Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{user.name ? user.name.split(' ')[0] : 'User'}</span>
+            </h1>
           </div>
           {!isEditing && (
             <button 
@@ -109,7 +113,7 @@ function ProfileDashboard() {
                 setEditPhoto(user.profilePhoto || "");
                 setIsEditing(true);
               }}
-              className="copy-button"
+              className="px-6 py-2.5 bg-white text-slate-700 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-full font-medium transition-all shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
             >
               Edit Profile
             </button>
@@ -117,80 +121,114 @@ function ProfileDashboard() {
         </div>
 
         {updateMsg.text && (
-          <div className={`message p-4 rounded-md text-sm font-medium mb-6 ${updateMsg.type === "error" ? "bg-red-50 text-red-600 border border-red-200" : "bg-green-50 text-green-700 border border-green-200"}`} style={{ padding: "12px", borderRadius: "8px", border: "1px solid" }}>
-            {updateMsg.text}
+          <div className={`p-4 rounded-xl text-sm font-medium mb-8 shadow-sm ${updateMsg.type === "error" ? "bg-red-50 text-red-600 border border-red-100" : "bg-emerald-50 text-emerald-700 border border-emerald-100"}`}>
+            <div className="flex items-center gap-2">
+              {updateMsg.type === "error" ? "⚠️" : "✅"} {updateMsg.text}
+            </div>
           </div>
         )}
 
         {isEditing ? (
-          <div className="profile-card" style={{ flexDirection: "column", alignItems: "flex-start" }}>
-            <h2 style={{ margin: "0 0 16px" }}>Edit Profile</h2>
-            <form onSubmit={handleUpdateProfile} style={{ width: "100%", display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div className="url-form" style={{ padding: 0, border: "none", boxShadow: "none", margin: 0, width: "100%" }}>
-                <label htmlFor="editName">Name</label>
+          <div className="bg-white/80 backdrop-blur-xl border border-slate-200/60 rounded-3xl p-8 shadow-xl mb-12 transition-all">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">Edit Profile</h2>
+            <form onSubmit={handleUpdateProfile} className="space-y-6">
+              <div>
+                <label htmlFor="editName" className="block text-sm font-semibold text-slate-700 mb-2">Name</label>
                 <input 
                   id="editName" 
                   type="text" 
                   value={editName} 
                   onChange={(e) => setEditName(e.target.value)} 
                   placeholder="Your Name" 
-                  style={{ width: "100%" }}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all shadow-sm"
                 />
               </div>
-              <div className="url-form" style={{ padding: 0, border: "none", boxShadow: "none", margin: 0, width: "100%" }}>
-                <label htmlFor="editPhoto">Profile Photo URL (Optional)</label>
+              <div>
+                <label htmlFor="editPhoto" className="block text-sm font-semibold text-slate-700 mb-2">Profile Photo URL (Optional)</label>
                 <input 
                   id="editPhoto" 
                   type="url" 
                   value={editPhoto} 
                   onChange={(e) => setEditPhoto(e.target.value)} 
                   placeholder="https://example.com/photo.jpg" 
-                  style={{ width: "100%" }}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all shadow-sm"
                 />
               </div>
-              <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
-                <button type="submit" disabled={updating} style={{ padding: "10px 20px", background: "var(--accent)", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}>
+              <div className="flex gap-4 pt-2">
+                <button type="submit" disabled={updating} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all shadow-md hover:shadow-lg disabled:opacity-70">
                   {updating ? "Saving..." : "Save Changes"}
                 </button>
-                <button type="button" onClick={() => setIsEditing(false)} disabled={updating} style={{ padding: "10px 20px", background: "transparent", color: "var(--text)", border: "1px solid var(--border)", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}>
+                <button type="button" onClick={() => setIsEditing(false)} disabled={updating} className="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md">
                   Cancel
                 </button>
               </div>
             </form>
           </div>
         ) : (
-          <div className="profile-card">
-            <div className="profile-avatar" style={{ overflow: "hidden" }}>
+          <div className="bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-3xl p-8 shadow-lg shadow-slate-200/40 mb-12 flex flex-col sm:flex-row items-center sm:items-start gap-8 transition-transform duration-300 hover:shadow-xl hover:shadow-blue-900/5 group">
+            <div className="w-28 h-28 shrink-0 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 text-blue-600 flex items-center justify-center text-4xl font-bold shadow-inner ring-4 ring-white group-hover:scale-105 transition-transform duration-300 overflow-hidden">
               {user.profilePhoto ? (
-                <img src={user.profilePhoto} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={user.profilePhoto} alt="Profile" className="w-full h-full object-cover" />
               ) : (
                 user.name ? user.name.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : "U")
               )}
             </div>
-            <div className="profile-info">
-              <h2>{user.name || "Anonymous User"}</h2>
-              <p>{user.email || "user@example.com"}</p>
+            <div className="text-center sm:text-left mt-2 sm:mt-4">
+              <h2 className="text-3xl font-extrabold text-slate-800 mb-2">{user.name || "Anonymous User"}</h2>
+              <p className="text-slate-500 font-medium text-lg bg-slate-100/80 inline-block px-4 py-1.5 rounded-full">{user.email || "user@example.com"}</p>
             </div>
           </div>
         )}
 
-        <div className="dashboard-grid">
-          <div className="stat-card">
-            <span className="stat-title">Total Links Shortened</span>
-            {loading ? (
-              <span className="status">Loading...</span>
-            ) : (
-              <h3 className="stat-value">{urlCount}</h3>
-            )}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Card 1 */}
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+            <div className="absolute -right-6 -top-6 w-32 h-32 bg-blue-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700 ease-out"></div>
+            <div className="relative z-10">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-6 text-2xl shadow-inner">🔗</div>
+              <span className="block text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Links Shortened</span>
+              {loading ? (
+                <div className="h-10 w-16 bg-slate-100 animate-pulse rounded"></div>
+              ) : (
+                <h3 className="text-5xl font-black text-slate-800">{urlCount}</h3>
+              )}
+            </div>
           </div>
           
-          <div className="stat-card">
-            <span className="stat-title">Account Status</span>
-            <h3 className="stat-value" style={{ color: '#10b981' }}>Active</h3>
+          {/* Card 2 */}
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+            <div className="absolute -right-6 -top-6 w-32 h-32 bg-purple-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700 ease-out"></div>
+            <div className="relative z-10">
+              <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mb-6 text-2xl shadow-inner">📱</div>
+              <span className="block text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">QR Codes</span>
+              {loading ? (
+                <div className="h-10 w-16 bg-slate-100 animate-pulse rounded"></div>
+              ) : (
+                <h3 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-purple-600 to-pink-500">{urlCount}</h3>
+              )}
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden group">
+            <div className="absolute -right-6 -top-6 w-32 h-32 bg-emerald-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700 ease-out"></div>
+            <div className="relative z-10">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 text-2xl shadow-inner">⚡</div>
+              <span className="block text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">Latest Activity</span>
+              {loading ? (
+                <div className="h-10 w-24 bg-slate-100 animate-pulse rounded mt-2"></div>
+              ) : urls.length > 0 ? (
+                <h3 className="text-2xl font-extrabold text-emerald-500 mt-4 leading-tight">
+                  {new Date(Math.max(...urls.map(u => new Date(u.createdAt)))).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                </h3>
+              ) : (
+                <h3 className="text-xl font-medium text-slate-400 mt-4">No links yet</h3>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
