@@ -51,7 +51,7 @@ if (!hasFrontendBuild) {
   });
 }
 
-app.get("*", (req, res, next) => {
+app.use((req, res, next) => {
   if (req.method !== "GET") {
     return next();
   }
@@ -61,7 +61,7 @@ app.get("*", (req, res, next) => {
   }
 
   if (!hasFrontendBuild) {
-    return res.status(404).send("Route not found");
+    return next();
   }
 
   res.sendFile(frontendIndexPath, (err) => {
