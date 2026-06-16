@@ -37,7 +37,13 @@ mongoose
 app.use("/api/auth", authRoutes);
 app.use("/api", urlRoutes);
 
-app.get("/:code([A-Za-z0-9]{6})", redirectUrl);
+app.get("/:code", (req, res, next) => {
+  const { code } = req.params;
+  if (/^[A-Za-z0-9]{6}$/.test(code)) {
+    return redirectUrl(req, res, next);
+  }
+  return next();
+});
 
 if (!hasFrontendBuild) {
   app.get("/", (req, res) => {
