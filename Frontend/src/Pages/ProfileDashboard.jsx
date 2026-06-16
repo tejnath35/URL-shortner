@@ -96,14 +96,14 @@ function ProfileDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/40 font-sans">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-blue-50/40 font-sans">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
             <p className="text-sm font-bold tracking-widest text-blue-600 uppercase mb-2">Dashboard</p>
             <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{user.name ? user.name.split(' ')[0] : 'User'}</span>
+              Welcome back, <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-600">{user.name ? user.name.split(' ')[0] : 'User'}</span>
             </h1>
           </div>
           {!isEditing && (
@@ -166,7 +166,7 @@ function ProfileDashboard() {
           </div>
         ) : (
           <div className="bg-white/70 backdrop-blur-xl border border-slate-200/60 rounded-3xl p-8 shadow-lg shadow-slate-200/40 mb-12 flex flex-col sm:flex-row items-center sm:items-start gap-8 transition-transform duration-300 hover:shadow-xl hover:shadow-blue-900/5 group">
-            <div className="w-28 h-28 shrink-0 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 text-blue-600 flex items-center justify-center text-4xl font-bold shadow-inner ring-4 ring-white group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+            <div className="w-28 h-28 shrink-0 rounded-full bg-linear-to-tr from-blue-100 to-indigo-100 text-blue-600 flex items-center justify-center text-4xl font-bold shadow-inner ring-4 ring-white group-hover:scale-105 transition-transform duration-300 overflow-hidden">
               {user.profilePhoto ? (
                 <img src={user.profilePhoto} alt="Profile" className="w-full h-full object-cover" />
               ) : (
@@ -204,7 +204,7 @@ function ProfileDashboard() {
               {loading ? (
                 <div className="h-10 w-16 bg-slate-100 animate-pulse rounded"></div>
               ) : (
-                <h3 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-purple-600 to-pink-500">{urlCount}</h3>
+                <h3 className="text-5xl font-black text-transparent bg-clip-text bg-linear-to-br from-purple-600 to-pink-500">{urlCount}</h3>
               )}
             </div>
           </div>
