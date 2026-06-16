@@ -8,11 +8,11 @@ function Home() {
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
       
-      <main className="flex-grow">
+      <main className="grow">
         {/* Hero Section */}
         <section className="relative overflow-hidden pt-24 pb-32 lg:pt-36 lg:pb-40">
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-white to-white"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-blue-100 via-white to-white"></div>
           </div>
           
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -23,7 +23,7 @@ function Home() {
             
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 max-w-4xl mx-auto leading-tight">
               Shorten Your Links, <br className="hidden sm:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-600">
                 Expand Your Reach
               </span>
             </h1>
