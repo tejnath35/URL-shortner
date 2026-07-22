@@ -70,13 +70,17 @@ export const shortenUrl = async (req, res) => {
 
     const existing = await Url.findOne({ longUrl: normalizedUrl, user: req.user._id });
     if (existing && !customCode) {
-      return res.status(200).json(existing);
+      const existingObject = existing.toObject();
+      existingObject.shortUrl = `${getBaseUrl(req)}/${existingObject.code}`;
+      return res.status(200).json(existingObject);
     }
 
     const shortUrl = `${getBaseUrl(req)}/${code}`;
     const url = await Url.create({ longUrl: normalizedUrl, shortUrl, code, user: req.user._id });
+    const urlObject = url.toObject();
+    urlObject.shortUrl = shortUrl;
 
-    return res.status(201).json(url);
+    return res.status(201).json(urlObject);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Server error creating short URL" });
