@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-function UrlList({ urls, loading }) {
+function UrlList({ urls, loading, onDelete }) {
   const [copied, setCopied] = useState("");
+  const [deleting, setDeleting] = useState(null);
 
   const copyToClipboard = async (value) => {
     try {
@@ -10,6 +11,18 @@ function UrlList({ urls, loading }) {
       setTimeout(() => setCopied(""), 2500);
     } catch {
       setCopied("");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this short link?")) {
+      return;
+    }
+    setDeleting(id);
+    try {
+      await onDelete(id);
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -47,6 +60,14 @@ function UrlList({ urls, loading }) {
                     onClick={() => copyToClipboard(displayUrl)}
                   >
                     {copied === displayUrl ? "Copied" : "Copy"}
+                  </button>
+                  <button
+                    type="button"
+                    className="delete-button"
+                    onClick={() => handleDelete(url._id)}
+                    disabled={deleting === url._id}
+                  >
+                    {deleting === url._id ? "Deleting..." : "Delete"}
                   </button>
                 </div>
               </li>

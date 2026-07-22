@@ -35,14 +35,8 @@ function Home() {
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link 
-                to={token ? "/urls" : "/register"} 
-                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-lg transition-all duration-200 shadow-[0_8px_30px_rgb(37,99,235,0.3)] hover:shadow-[0_8px_30px_rgb(37,99,235,0.5)] transform hover:-translate-y-1 w-full sm:w-auto text-center"
-              >
-                {token ? "Manage Links" : "Get Started for Free"}
-              </Link>
-              <Link 
                 to="/urls" 
-                className="px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-full font-semibold text-lg transition-all duration-200 shadow-sm w-full sm:w-auto text-center"
+                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-lg transition-all duration-200 shadow-[0_8px_30px_rgb(37,99,235,0.3)] hover:shadow-[0_8px_30px_rgb(37,99,235,0.5)] transform hover:-translate-y-1 w-full sm:w-auto text-center"
               >
                 Shorten a Link
               </Link>

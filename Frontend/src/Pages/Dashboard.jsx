@@ -53,7 +53,7 @@ function Dashboard() {
     }
   };
 
-  const createShortUrl = async (longUrl) => {
+  const createShortUrl = async (longUrl, customCode) => {
     setMessage("");
     setLoading(true);
 
@@ -64,7 +64,7 @@ function Dashboard() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ longUrl }),
+        body: JSON.stringify({ longUrl, customCode }),
       });
 
       const data = await response.json();
@@ -75,6 +75,10 @@ function Dashboard() {
         return;
       }
       
+      if (response.status === 409) {
+        throw new Error(data.error || "This code is already taken");
+      }
+
       if (!response.ok) {
         throw new Error(data.error || "Could not shorten URL");
       }
@@ -85,6 +89,36 @@ function Dashboard() {
       setMessage(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteUrl = async (id) => {
+    setMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE}/urls/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || "Could not delete URL");
+      }
+
+      setUrls((current) => current.filter((url) => url._id !== id));
+      setMessage("URL deleted successfully.");
+    } catch (error) {
+      setMessage(error.message);
     }
   };
 
@@ -107,7 +141,7 @@ function Dashboard() {
               {message}
             </div>
           )}
-          <UrlList urls={urls} loading={loading} />
+          <UrlList urls={urls} loading={loading} onDelete={deleteUrl} />
         </main>
       </div>
     </>

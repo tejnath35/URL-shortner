@@ -35,7 +35,7 @@ const getBaseUrl = (req) => {
 };
 
 export const shortenUrl = async (req, res) => {
-  const { longUrl } = req.body;
+  const { longUrl, customCode } = req.body;
 
   if (!longUrl) {
     return res.status(400).json({ error: "Missing longUrl field" });
@@ -48,14 +48,29 @@ export const shortenUrl = async (req, res) => {
   }
 
   try {
-    const existing = await Url.findOne({ longUrl: normalizedUrl, user: req.user._id });
-    if (existing) {
-      return res.status(200).json(existing);
+    let code = customCode;
+
+    if (code) {
+      if (!/^[a-zA-Z0-9_-]{2,20}$/.test(code)) {
+        return res.status(400).json({ error: "Custom code must be 2-20 characters and contain only letters, numbers, hyphens, or underscores" });
+      }
+
+      const codeExists = await Url.findOne({ code });
+      if (codeExists) {
+        return res.status(409).json({ error: "This code is already taken" });
+      }
     }
 
-    let code = generateCode();
-    while (await Url.findOne({ code })) {
+    if (!code) {
       code = generateCode();
+      while (await Url.findOne({ code })) {
+        code = generateCode();
+      }
+    }
+
+    const existing = await Url.findOne({ longUrl: normalizedUrl, user: req.user._id });
+    if (existing && !customCode) {
+      return res.status(200).json(existing);
     }
 
     const shortUrl = `${getBaseUrl(req)}/${code}`;
@@ -94,5 +109,27 @@ export const redirectUrl = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Server error redirecting" });
+  }
+};
+
+export const deleteUrl = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Missing URL ID" });
+  }
+
+  try {
+    const url = await Url.findOne({ _id: id, user: req.user._id });
+
+    if (!url) {
+      return res.status(404).json({ error: "URL not found or unauthorized" });
+    }
+
+    await Url.deleteOne({ _id: id });
+    return res.status(200).json({ message: "URL deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error deleting URL" });
   }
 };

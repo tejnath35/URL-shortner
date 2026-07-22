@@ -39,7 +39,7 @@ app.use("/api", urlRoutes);
 
 app.get("/:code", (req, res, next) => {
   const { code } = req.params;
-  if (/^[A-Za-z0-9]{6}$/.test(code)) {
+  if (/^[A-Za-z0-9_-]{2,20}$/.test(code)) {
     return redirectUrl(req, res, next);
   }
   return next();
