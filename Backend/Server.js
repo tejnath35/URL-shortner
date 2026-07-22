@@ -39,6 +39,12 @@ app.use("/api", urlRoutes);
 
 app.get("/:code", (req, res, next) => {
   const { code } = req.params;
+  const reservedPaths = ["urls", "login", "register", "profile", "api", "auth"];
+
+  if (reservedPaths.includes(code.toLowerCase())) {
+    return next();
+  }
+
   if (/^[A-Za-z0-9_-]{2,20}$/.test(code)) {
     return redirectUrl(req, res, next);
   }
