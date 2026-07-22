@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar.jsx";
+import API_BASE from "../apiConfig.js";
 import "../App.css";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function ProfileDashboard() {
   const [urlCount, setUrlCount] = useState(0);

@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import UrlForm from "../Components/UrlForm.jsx";
 import UrlList from "../Components/UrlList.jsx";
 import Navbar from "../Components/Navbar.jsx";
+import API_BASE from "../apiConfig.js";
 import "../App.css";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function Dashboard() {
   const [urls, setUrls] = useState([]);

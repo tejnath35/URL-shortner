@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import API_BASE from "../apiConfig.js";
 import "../App.css";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function Login() {
   const [email, setEmail] = useState("");
