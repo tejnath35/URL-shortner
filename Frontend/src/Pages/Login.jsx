@@ -33,7 +33,7 @@ function Login() {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -42,8 +42,8 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700">
+    <div className="auth-shell">
+      <div className="auth-card">
         <div className="text-center">
           <p className="text-sm font-semibold tracking-wider text-purple-400 uppercase mb-2">Welcome Back</p>
           <h2 className="text-3xl font-extrabold text-white">Login to your account</h2>
