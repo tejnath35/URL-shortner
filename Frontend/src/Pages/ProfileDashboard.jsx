@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar.jsx";
 import API_BASE from "../apiConfig.js";
+import { readStoredUser } from "../utils/storage.js";
 import "../App.css";
 
 function ProfileDashboard() {
@@ -10,7 +11,7 @@ function ProfileDashboard() {
   const [loading, setLoading] = useState(true);
   
   // Profile editing state
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || "{}"));
+  const [user, setUser] = useState(readStoredUser());
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(user.name || "");
   const [editPhoto, setEditPhoto] = useState(user.profilePhoto || "");
@@ -83,7 +84,7 @@ function ProfileDashboard() {
 
       // Update local storage and state
       localStorage.setItem("user", JSON.stringify(data));
-      setUser(data);
+      setUser(data || {});
       setIsEditing(false);
       setUpdateMsg({ type: "success", text: "Profile updated successfully!" });
       setTimeout(() => setUpdateMsg({ type: "", text: "" }), 3000);
