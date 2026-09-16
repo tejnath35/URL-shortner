@@ -5,7 +5,7 @@ export function readStoredUser() {
 
     const parsed = JSON.parse(rawUser);
     return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch (error) {
+  } catch {
     console.warn('Invalid stored user data, clearing it.');
     localStorage.removeItem('user');
     return {};

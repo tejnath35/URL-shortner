@@ -10,6 +10,16 @@ const urlSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  title: {
+    type: String,
+    trim: true,
+    maxlength: 80,
+    default: "",
+  },
+  tags: {
+    type: [String],
+    default: [],
+  },
   shortUrl: {
     type: String,
     required: true,
@@ -22,6 +32,18 @@ const urlSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  expiresAt: {
+    type: Date,
+    default: null,
+  },
+  clicks: {
+    type: Number,
+    default: 0,
+  },
+  lastClickedAt: {
+    type: Date,
+    default: null,
   },
 });
 

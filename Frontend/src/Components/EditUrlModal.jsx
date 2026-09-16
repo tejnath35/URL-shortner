@@ -1,18 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "../styles/EditUrlModal.css";
 
 function EditUrlModal({ url, onSave, onClose, loading }) {
-  const [customText, setCustomText] = useState("");
-
-  useEffect(() => {
-    if (url) {
-      setCustomText(url.customText || "");
-    }
-  }, [url]);
+  const [form, setForm] = useState(() => ({
+    longUrl: url?.longUrl || "",
+    title: url?.title || "",
+    tags: (url?.tags || []).join(", "),
+    expiresAt: url?.expiresAt ? new Date(url.expiresAt).toISOString().slice(0, 16) : "",
+  }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(url._id, customText);
+    onSave(url._id, {
+      ...form,
+      title: form.title.trim(),
+      tags: form.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
+      expiresAt: form.expiresAt || null,
+    });
   };
 
   if (!url) return null;
@@ -21,7 +25,7 @@ function EditUrlModal({ url, onSave, onClose, loading }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Edit Link Text</h3>
+          <h3>Edit Link</h3>
           <button className="modal-close" onClick={onClose}>
             ×
           </button>
@@ -29,36 +33,41 @@ function EditUrlModal({ url, onSave, onClose, loading }) {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="customText">Display Text</label>
+            <label htmlFor="editLongUrl">Destination URL</label>
             <input
-              id="customText"
+              id="editLongUrl"
               type="text"
-              placeholder="Give your link a name..."
-              value={customText}
-              onChange={(e) => setCustomText(e.target.value)}
+              value={form.longUrl}
+              onChange={(e) => setForm({ ...form, longUrl: e.target.value })}
+              required
             />
           </div>
 
           <div className="form-group">
-            <label>Long URL</label>
+            <label htmlFor="editTitle">Title</label>
             <input
+              id="editTitle"
               type="text"
-              value={url.longUrl}
-              readOnly
-              disabled
-              style={{ backgroundColor: "#f3f4f6", cursor: "not-allowed" }}
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              maxLength={80}
             />
           </div>
 
           <div className="form-group">
-            <label>Short URL</label>
+            <label htmlFor="editTags">Tags</label>
             <input
+              id="editTags"
               type="text"
-              value={url.shortUrl}
-              readOnly
-              disabled
-              style={{ backgroundColor: "#f3f4f6", cursor: "not-allowed" }}
+              placeholder="work, campaign"
+              value={form.tags}
+              onChange={(e) => setForm({ ...form, tags: e.target.value })}
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="editExpiresAt">Expires</label>
+            <input id="editExpiresAt" type="datetime-local" value={form.expiresAt} onChange={(e) => setForm({ ...form, expiresAt: e.target.value })} />
           </div>
 
           <div className="modal-actions">

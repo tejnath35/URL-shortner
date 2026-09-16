@@ -2,8 +2,6 @@ import { Link } from "react-router-dom";
 import Navbar from "../Components/Navbar.jsx";
 
 function Home() {
-  const token = localStorage.getItem("token");
-
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />

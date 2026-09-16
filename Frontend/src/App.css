@@ -142,6 +142,26 @@ h1 {
   cursor: not-allowed;
 }
 
+.form-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.form-options label {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.form-options input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+
 .message {
   margin-bottom: 16px;
   color: var(--text-h);
@@ -167,6 +187,72 @@ h1 {
 .list-header h2 {
   margin: 0;
   font-size: 1.2rem;
+}
+
+.list-tools {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.list-tools input,
+.list-tools select {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text-h);
+  background: #fff;
+}
+
+.list-tools input {
+  flex: 1;
+  min-width: 0;
+}
+
+.link-title {
+  margin: 0 0 4px;
+  color: var(--text-h);
+  font-weight: 700;
+}
+
+.link-meta {
+  margin-top: 8px;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tag-list span {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+}
+
+.edit-button,
+.qr-download {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text-h);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.edit-button:hover,
+.qr-download:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .status {
@@ -256,6 +342,17 @@ h1 {
 
   .copy-button {
     width: 100%;
+  }
+
+  .form-options,
+  .list-tools {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .edit-button,
+  .qr-download {
+    text-align: center;
   }
 }
 

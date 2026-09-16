@@ -34,8 +34,18 @@ const getBaseUrl = (req) => {
   return `${protocol}://${host}`;
 };
 
+const normalizeTags = (tags) => [...new Set((Array.isArray(tags) ? tags : [])
+  .map((tag) => String(tag).trim().toLowerCase())
+  .filter(Boolean))].slice(0, 8);
+
+const parseExpiry = (expiresAt) => {
+  if (!expiresAt) return null;
+  const date = new Date(expiresAt);
+  return Number.isNaN(date.getTime()) || date <= new Date() ? null : date;
+};
+
 export const shortenUrl = async (req, res) => {
-  const { longUrl, customCode } = req.body;
+  const { longUrl, customCode, title, tags, expiresAt } = req.body;
 
   if (!longUrl) {
     return res.status(400).json({ error: "Missing longUrl field" });
@@ -76,7 +86,15 @@ export const shortenUrl = async (req, res) => {
     }
 
     const shortUrl = `${getBaseUrl(req)}/${code}`;
-    const url = await Url.create({ longUrl: normalizedUrl, shortUrl, code, user: req.user._id });
+    const url = await Url.create({
+      longUrl: normalizedUrl,
+      shortUrl,
+      code,
+      user: req.user._id,
+      title: String(title || "").trim().slice(0, 80),
+      tags: normalizeTags(tags),
+      expiresAt: parseExpiry(expiresAt),
+    });
     const urlObject = url.toObject();
     urlObject.shortUrl = shortUrl;
 
@@ -109,10 +127,47 @@ export const redirectUrl = async (req, res) => {
     if (!url) {
       return res.status(404).json({ error: "Short URL not found" });
     }
+    if (url.expiresAt && url.expiresAt <= new Date()) {
+      return res.status(410).send("This short link has expired.");
+    }
+    await Url.updateOne({ _id: url._id }, { $inc: { clicks: 1 }, $set: { lastClickedAt: new Date() } });
     return res.redirect(url.longUrl);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Server error redirecting" });
+  }
+};
+
+export const updateUrl = async (req, res) => {
+  const { id } = req.params;
+  const { longUrl, title, tags, expiresAt } = req.body;
+
+  if (!id) return res.status(400).json({ error: "Missing URL ID" });
+
+  try {
+    const updates = {
+      title: String(title || "").trim().slice(0, 80),
+      tags: normalizeTags(tags),
+      expiresAt: parseExpiry(expiresAt),
+    };
+
+    if (longUrl) {
+      const normalizedUrl = normalizeUrl(longUrl);
+      if (!isValidUrl(normalizedUrl)) return res.status(400).json({ error: "Invalid URL format" });
+      updates.longUrl = normalizedUrl;
+    }
+
+    const url = await Url.findOneAndUpdate(
+      { _id: id, user: req.user._id },
+      updates,
+      { new: true, runValidators: true },
+    );
+
+    if (!url) return res.status(404).json({ error: "URL not found or unauthorized" });
+    return res.json(url);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error updating URL" });
   }
 };
 

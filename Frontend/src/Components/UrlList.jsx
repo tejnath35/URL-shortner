@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function UrlList({ urls, loading, onDelete }) {
+function UrlList({ urls, loading, onDelete, onEdit, onOpen }) {
   const [copied, setCopied] = useState("");
   const [deleting, setDeleting] = useState(null);
 
@@ -40,14 +40,18 @@ function UrlList({ urls, loading, onDelete }) {
           {urls.map((url) => {
             const displayUrl = url.shortUrl;
             const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url.shortUrl)}`;
+            const isExpired = url.expiresAt && new Date(url.expiresAt) <= new Date();
             
             return (
               <li key={url._id} className="url-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', padding: '16px', background: 'white', borderRadius: '8px', border: '1px solid var(--border)', marginBottom: '12px' }}>
                 <div className="url-text" style={{ flex: 1, overflow: 'hidden' }}>
+                  <p className="link-title">{url.title || "Untitled link"}</p>
                   <p className="original-url" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-light)', fontSize: '0.875rem', marginBottom: '4px' }}>{url.longUrl}</p>
-                  <a href={url.shortUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: '600', textDecoration: 'none', display: 'inline-block' }}>
+                  <a href={url.shortUrl} target="_blank" rel="noreferrer" onClick={() => onOpen(url._id)} style={{ color: 'var(--accent)', fontWeight: '600', textDecoration: 'none', display: 'inline-block' }}>
                     {displayUrl}
                   </a>
+                  <div className="link-meta">{url.clicks || 0} clicks {isExpired ? "· Expired" : url.expiresAt ? `· Expires ${new Date(url.expiresAt).toLocaleDateString()}` : ""}</div>
+                  {!!url.tags?.length && <div className="tag-list">{url.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -61,6 +65,8 @@ function UrlList({ urls, loading, onDelete }) {
                   >
                     {copied === displayUrl ? "Copied" : "Copy"}
                   </button>
+                  <button type="button" className="edit-button" onClick={() => onEdit(url)}>Edit</button>
+                  <a className="qr-download" href={qrCodeUrl} target="_blank" rel="noreferrer" download={`qr-${url.code}.png`} aria-label={`Download QR code for ${url.shortUrl}`}>QR</a>
                   <button
                     type="button"
                     className="delete-button"

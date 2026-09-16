@@ -26,34 +26,27 @@ function ProfileDashboard() {
       navigate("/login");
       return;
     }
-    fetchUrls();
+    const loadUrls = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/urls`, { headers: { Authorization: `Bearer ${token}` } });
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/login");
+          return;
+        }
+        if (response.ok) {
+          const data = await response.json();
+          setUrls(data);
+          setUrlCount(data.length);
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUrls();
   }, [navigate, token]);
-
-  const fetchUrls = async () => {
-    try {
-      const response = await fetch(`${API_BASE}/urls`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
-      if (response.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/login");
-        return;
-      }
-      
-      if (response.ok) {
-        const data = await response.json();
-        setUrls(data);
-        setUrlCount(data.length);
-      }
-    } catch (error) {
-      console.error("Error fetching stats:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
